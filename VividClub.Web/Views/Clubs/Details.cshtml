@@ -1,0 +1,26 @@
+﻿@model ClubModel
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3 well text-center">
+        <div class="thumbnail">
+            <h4>You Have Joined <strong> @Model.Name </strong> Club</h4>
+            @if (!string.IsNullOrEmpty(Model.Photo.ToRenderablePictureString()))
+            {
+
+                    <img src="@Model.Photo.ToRenderablePictureString()" class="img-thumbnail" style="width:30%;height:30%"  alt="Club">
+
+            }
+            <p><strong>@Model.Description</strong></p>
+
+            <p>@Model.Description</p>
+            <small class="text-left">Members: @Model.MembersCount</small>
+        </div>
+        <div class="row">
+            @if (!Model.MemberId.Contains(User.GetUserId()))
+            {
+                <a asp-controller="Clubs" asp-action="MakePost" asp-route-id="@Model.Id" class="btn btn-primary disabled">Make a Post</a>
+            }
+
+            <a href='javascript:history.go(-1)' class="btn btn-default">Back</a>
+        </div>
+    </div>
+</div>

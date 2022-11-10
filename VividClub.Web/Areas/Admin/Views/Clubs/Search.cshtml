@@ -1,0 +1,101 @@
+﻿@model PaginatedList<ClubModel>
+
+@{
+    ViewData["Title"] = "Search Clubs";
+}
+
+<h3 class="text-center">@ViewData["Title"]</h3>
+
+<div class="row">
+    
+    <div>
+        <div>
+            <a class="btn btn-primary" asp-area="@GlobalConstants.AdminArea" asp-controller="Clubs" asp-action="Create">Create a New Club</a>
+        </div><br />
+        <div class="col-sm-6 col-sm-offset-3">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <form method="get">
+                        <div class="form-group">
+                            <strong>Find by Club Name:</strong>
+                            <input type="text" name="@GlobalConstants.SearchTerm" value="@ViewData[GlobalConstants.SearchTerm]" class="form-control"/>
+                            <br/>
+                            <div>
+                                <button type="submit" class="btn btn-primary">Search</button> |
+                                <a asp-action="Search">Back to Full List</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <hr/>
+            @if (Model.Any())
+            {
+
+                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+
+                @foreach (var club in Model)
+                {
+
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <img src="@club.Photo.ToRenderablePictureString()" class="img-circle pull-left" height="55" width="55" alt="Avatar">
+                            </div>
+                            <div class="col-sm-6 text-left">
+                                <div class="row">
+                                    <a href="#"><strong>@club.Name</strong></a>
+                                </div>
+                                <div class="row">
+                                    @club.Description
+                                </div>
+
+                            </div>
+                            <div class="col-sm-4 text-left">
+                                <div class="row">
+                                    <a asp-area="@GlobalConstants.AdminArea"
+                                       asp-controller="Clubs"
+                                       asp-action="Edit"
+                                       asp-route-id="@club.Id" class="btn btn-warning">Edit</a>
+                                    <a asp-area="@GlobalConstants.AdminArea"
+                                       asp-controller="Clubs"
+                                       asp-action="Delete"
+                                       asp-route-id="@club.Id" class="btn btn-danger">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3">
+                        <a asp-area="@GlobalConstants.AdminArea" asp-controller="Clubs" asp-action="Search"
+                           asp-route-searchTerm="@ViewData[GlobalConstants.SearchTerm]"
+                           asp-route-page="@(Model.PageIndex - 1)"
+                           class="btn btn-default @prevDisabled">
+                            Previous
+                        </a>
+                        <a asp-area="@GlobalConstants.AdminArea" asp-controller="Clubs" asp-action="Search"
+                           asp-route-searchTerm="@ViewData[GlobalConstants.SearchTerm]"
+                           asp-route-page="@(Model.PageIndex + 1)"
+                           class="btn btn-default @nextDisabled">
+                            Next
+                        </a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="well">
+                    <div class="row">
+                        <div class="col-sm-12 text-center">
+                            <h2>There are no club corresponding to your search!</h2>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
